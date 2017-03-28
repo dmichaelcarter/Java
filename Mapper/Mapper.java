@@ -25,7 +25,7 @@ public class Mapper extends JFrame {
   double f(double x) {
     return Math.sin(x/5);
   }
-  String f = "sin(x)";
+  String f = "sin(x/5)";
   //*******************************************************
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
