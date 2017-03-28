@@ -1,0 +1,74 @@
+//***************************************************************************************
+// Mapper.java
+// David Michael Carter
+//
+// Created 27 March 2017
+//
+// maps functions on the cartesian plane
+// INPUT:    x-Max
+//           y-Max
+//           function f(x) (Using Java syntax)
+//
+// OUTPUT:   function mapped on cartesian plane
+//***************************************************************************************
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Scanner;
+
+public class Mapper extends JFrame {
+  
+  public void paint(Graphics g) {
+   g.setColor(Color.black);
+   
+   // Set up x- and y- axes such that Origin = (450,450)
+   //*******************************************************
+   g.drawLine(50,450,850,450);     // x-axis
+   g.drawLine(50,450,55,445);      // x-axis arrows
+   g.drawLine(50,450,55,455);
+   g.drawLine(845,445,850,450);
+   g.drawLine(845,455,850,450);
+   g.drawString("x", 855,455);     // label "x"
+   
+   for (int i = 0; i<=10; i++) {   // tick marks on x-axis
+     g.drawLine((75 + i*75),445,(75 + i*75),455);
+   }
+   
+   for (int j = 0; j<=10; j++) {   // tick marks on y-axis
+     g.drawLine(445, (75 + j*75),455,(75 + j*75));
+   }
+   
+   g.drawLine(450,50,450,850);     // y-axis
+   g.drawLine(445,55,450,50);      // y-axis arrows
+   g.drawLine(450,50,455,55);
+   g.drawLine(445,845,450,850);
+   g.drawLine(450,850,455,845);
+   g.drawString("y", 448,866);     // label "y"
+   //*******************************************************
+   
+  }
+ 
+ public static void main(String[] args) {
+   
+   Scanner s = new Scanner(System.in);
+   
+   System.out.print("Enter x-max: ");  // get domain maximum
+   double xMax = s.nextDouble();       // set domain max
+   double xMin = xMax*(-1);            // set domain min based on max
+   
+   System.out.print("Enter y-max: ");  // get range maximum
+   double yMax = s.nextDouble();       // set range max
+   double yMin = yMax*(-1);            // set range min based on max
+   
+   System.out.println(xMin + " " + xMax + " " + yMin + " " + yMax);
+   
+   Mapper m = new Mapper();
+   m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   m.setSize(900,900);
+   m.setBackground(Color.white);
+   m.setVisible(true);
+ }
+ 
+}
+
+
