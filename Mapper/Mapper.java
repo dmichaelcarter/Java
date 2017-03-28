@@ -9,10 +9,11 @@
 //           yMax (prompted by program)
 //           minimum bound of integration (prompted by program)
 //           maximum bound of integration (prompted by program)
-//           function f(x) [input line 26]
+//           function f(x) [input line 27]
 //
 // OUTPUT:   function mapped on cartesian plane
 //           Maps on interval [-xMax, xMax]
+//           Integral will be visualized
 //***************************************************************************************
 
 import javax.swing.*;
