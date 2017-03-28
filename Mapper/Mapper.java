@@ -90,9 +90,12 @@ public class Mapper extends JFrame {
    
    // Map f(x)
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   currentX = 75;
-   intMinToCoord = (int)(((intMin + xMax)/(2*xMax))*750 + 75); 
-   intMaxToCoord = (int)(((intMax + xMax)/(2*xMax))*750 + 75); 
+   currentX = 75;                                              // Start mapping loop on the left cursor bound
+   intMinToCoord = (int)(((intMin + xMax)/(2*xMax))*750 + 75); // transform minimum bound from [-xMax, xMax] 
+                                                               //   to cursor position
+   intMaxToCoord = (int)(((intMax + xMax)/(2*xMax))*750 + 75); // transform maximum bound from [-xMax, xMax] 
+                                                               //   to cursor position
+   
    while ((int)currentX < 825) {
      xCoordToNumberLine = ((currentX-75)/750)*2*xMax - xMax;   // transform java cursor to number on [-xMax, xMax]
      fX = f(xCoordToNumberLine);                               // f(x) computed at cursor position
@@ -103,7 +106,6 @@ public class Mapper extends JFrame {
      
      //Map by drawing line from current cursor position to cursor position + 1 evaluated by f
      g.drawLine((int)currentX, (int)yNumberLineToCoord, (int)(currentX + 1), (int)y2NumberLineToCoord);
-     
      
      // Visualize Integral
      if ((currentX >= intMinToCoord) && (currentX <= intMaxToCoord)) {
