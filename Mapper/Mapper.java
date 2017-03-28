@@ -48,7 +48,7 @@ public class Mapper extends JFrame {
    g.setColor(Color.black);
    
    // Set up x- and y-axis such that Origin = (450,450)
-   //*******************************************************
+   //*****************************************************************
    g.drawLine(50,450,850,450);     // x-axis
    g.drawLine(50,450,55,445);      // x-axis arrows
    g.drawLine(50,450,55,455);
@@ -83,13 +83,15 @@ public class Mapper extends JFrame {
      g.drawString(String.format("%.2f", currentY), 460, 80 + i*75);
      }
    }
-   //*******************************************************
+   //*****************************************************************
+   
+   
    
    // Map f(x)
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    currentX = 75;
-   //intMinToCoord = ; 
-   //intMaxToCoord = ; 
+   intMinToCoord = (int)(((intMin + xMax)/(2*xMax))*750 + 75); 
+   intMaxToCoord = (int)(((intMax + xMax)/(2*xMax))*750 + 75); 
    while ((int)currentX < 825) {
      xCoordToNumberLine = ((currentX-75)/750)*2*xMax - xMax;   // transform java cursor to number on [-xMax, xMax]
      fX = f(xCoordToNumberLine);                               // f(x) computed at cursor position
