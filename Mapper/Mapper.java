@@ -1,20 +1,27 @@
-//***************************************************************************************
+//************************************************************************************************************
 // Mapper.java
 // David Michael Carter
-//
 // Created 27 March 2017
 //
-// Maps functions on the Cartesian plane
-// INPUT:    xMax (prompted by program)
-//           yMax (prompted by program)
-//           minimum bound of integration (prompted by program)
-//           maximum bound of integration (prompted by program)
-//           function f(x) [input line 27]
+// Maps functions on the Cartesian plane with an adjustable domain and range
+// Integrates function over specified interval using Composite Simpson's Rule
+// 
+// INPUT:    domain maximum                (prompted by program)
+//           range maximum                 (prompted by program)
+//           minimum bound of integration  (prompted by program)
+//           maximum bound of integration  (prompted by program)
+//           step size (h)                 (prompted by program)
+//           function f(x) [input line 34]
 //
-// OUTPUT:   function mapped on cartesian plane
-//           Maps on interval [-xMax, xMax]
-//           Integral will be visualized
-//***************************************************************************************
+// OUTPUT:   function mapped on cartesian plane; interval displayed is [-xMax, xMax]
+//           numerical approximation of integral
+//           (Integral will be visualized)
+//
+//     Composite Simpson's Rule: https://en.wikipedia.org/wiki/Simpson%27s_rule#Composite_Simpson.27s_rule
+//     ERROR BOUND:
+//                   [(h^4)/180]*(intMax - intMin)*max{abs(4th derivative of f evaluated in [intMin, intMax])}
+// 
+//************************************************************************************************************
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +33,7 @@ public class Mapper extends JFrame {
   double f(double x) {
     return Math.sin(x/5);
   }
-  String f = "sin(x/5)";
+  String f = "e^(x^2)";
   //*******************************************************
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
@@ -44,6 +51,10 @@ public class Mapper extends JFrame {
   public static double intMax;  // maximum bound of integration
   int intMinToCoord;
   int intMaxToCoord;
+  
+  double simpson(double intMin, double intMax, double stepSize) {
+    return 1.0;
+  }
   
   public void paint(Graphics g) {
    g.setColor(Color.black);
@@ -89,7 +100,7 @@ public class Mapper extends JFrame {
    
    
    // Map f(x)
-   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    currentX = 75;                                              // Start mapping loop on the left cursor bound
    intMinToCoord = (int)(((intMin + xMax)/(2*xMax))*750 + 75); // transform minimum bound from [-xMax, xMax] 
                                                                //   to cursor position
@@ -114,7 +125,7 @@ public class Mapper extends JFrame {
      
      currentX += 1;
    }
-   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    
    
   }
@@ -139,7 +150,6 @@ public class Mapper extends JFrame {
    m.setBackground(Color.white);
    m.setVisible(true);
  }
- 
 }
 
 
