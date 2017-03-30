@@ -163,7 +163,7 @@ public class Mapper extends JFrame {
    System.out.print("Enter step size: ");             // prompt step size
    h = s.nextDouble();                                // set step size
    
-   System.out.print("The integral approzimation of " + f + " from " + a + " to " + b + " with step size " + h + " (using Composite Simpson's Rule) is " + simpson(a, b, h));
+   System.out.print("The integral approximation of " + f + " from " + a + " to " + b + " with step size " + h + " (using Composite Simpson's Rule) is " + simpson(a, b, h));
    
    Mapper m = new Mapper();
    m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
