@@ -6,11 +6,11 @@
 // Maps functions on the Cartesian plane with an adjustable domain and range
 // Integrates function over specified interval using Composite Simpson's Rule
 // 
-// INPUT:    domain maximum                (prompted by program)
-//           range maximum                 (prompted by program)
-//           minimum bound of integration  (prompted by program)
-//           maximum bound of integration  (prompted by program)
-//           step size (h)                 (prompted by program)
+// INPUT:    xMax - domain maximum             (prompted by program)
+//           yMax - range maximum              (prompted by program)
+//           a - minimum bound of integration  (prompted by program)
+//           b - maximum bound of integration  (prompted by program)
+//           h - step size                     (prompted by program)
 //           function f(x) [input line 34]
 //
 // OUTPUT:   function mapped on cartesian plane; interval displayed is [-xMax, xMax]
@@ -19,7 +19,7 @@
 //
 //     Composite Simpson's Rule: https://en.wikipedia.org/wiki/Simpson%27s_rule#Composite_Simpson.27s_rule
 //     ERROR BOUND:
-//                   [(h^4)/180]*(intMax - intMin)*max{abs(4th derivative of f evaluated in [intMin, intMax])}
+//                   [(h^4)/180]*(b - a)*max{abs(4th derivative of f evaluated in [a, b])}
 // 
 //************************************************************************************************************
 
@@ -30,30 +30,47 @@ import java.util.Scanner;
 public class Mapper extends JFrame {
   //  USER INPUT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // ******************** SET f(x) ************************
-  double f(double x) {
-    return Math.sin(x/5);
+  public static double f(double x) {
+    return Math.exp((-1)*Math.pow(x,2));
   }
-  String f = "e^(x^2)";
+  public static String f = "e^(-x^2)";
   //*******************************************************
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
-  double currentX;              // current cursor x-position
-  double currentY;              // current cursor y-position
+  double currentX;             // current cursor x-position
+  double currentY;             // current cursor y-position
   double xCoordToNumberLine;    
   double x2CoordToNumberLine;   
   double yNumberLineToCoord;    
   double y2NumberLineToCoord;   
   double fX;                    
   double f2X;                   
-  public static double xMax;    // create xMax double to be set in main method
-  public static double yMax;    // create yMax double to be set in main method
-  public static double intMin;  // minimum bound of integration
-  public static double intMax;  // maximum bound of integration
+  public static double xMax;   // create domain right-bound
+  public static double yMax;   // create range right-bound
+  public static double a;      // left bound of integration
+  public static double b;      // eight bound of integration
+  public static double h;      // step size
   int intMinToCoord;
   int intMaxToCoord;
+  public static int n;
   
-  double simpson(double intMin, double intMax, double stepSize) {
-    return 1.0;
+  public static double simpson(double a, double b, double h) {  // Composite Simpson's Rule
+    n = (int)((b - a) / h);
+    double sum1 = 0;
+    double sum2 = 0;
+    
+    if ((n % 2) != 0) {  // n needs to be even
+      n++;
+    }
+    
+    for (int i = 1; i <= ((n/2)-1); i++){
+      sum1 += f(a + 2*i*h);
+    }
+    for (int j = 1; j <= (n/2); j++){
+      sum2 += f(a + (2*j-1)*h);
+    }    
+    
+    return (h/3)*(f(a) + 2*sum1 + 4*sum2 + f(b));
   }
   
   public void paint(Graphics g) {
@@ -102,10 +119,10 @@ public class Mapper extends JFrame {
    // Map f(x)
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    currentX = 75;                                              // Start mapping loop on the left cursor bound
-   intMinToCoord = (int)(((intMin + xMax)/(2*xMax))*750 + 75); // transform minimum bound from [-xMax, xMax] 
-                                                               //   to cursor position
-   intMaxToCoord = (int)(((intMax + xMax)/(2*xMax))*750 + 75); // transform maximum bound from [-xMax, xMax] 
-                                                               //   to cursor position
+   intMinToCoord = (int)(((a + xMax)/(2*xMax))*750 + 75);      // transform minimum bound from [-xMax, xMax] 
+                                                               //    to pizel space
+   intMaxToCoord = (int)(((b + xMax)/(2*xMax))*750 + 75);      // transform maximum bound from [-xMax, xMax] 
+                                                               //    to pixel space
    
    while ((int)currentX < 825) {
      xCoordToNumberLine = ((currentX-75)/750)*2*xMax - xMax;   // transform java cursor to number on [-xMax, xMax]
@@ -115,7 +132,7 @@ public class Mapper extends JFrame {
      f2X = f(x2CoordToNumberLine);                             // f(x) computed at cursor position + 1
      y2NumberLineToCoord = (f2X /(-2*yMax))*750 + 450;         // transform java cursor + 1 to number on [-yMax, yMax]
      
-     //Map by drawing line from current cursor position to cursor position + 1 evaluated by f
+     //Map by drawing line from f(
      g.drawLine((int)currentX, (int)yNumberLineToCoord, (int)(currentX + 1), (int)y2NumberLineToCoord);
      
      // Visualize Integral
@@ -133,16 +150,20 @@ public class Mapper extends JFrame {
  public static void main(String[] args) throws Exception{
    Scanner s = new Scanner(System.in);
    
-   System.out.print("Enter x-max: ");   // prompt domain maximum
-   xMax = s.nextDouble();               // set domain max
-   System.out.print("Enter y-max: ");   // prompt range maximum
-   yMax = s.nextDouble();               // set range max
+   System.out.print("Enter x-max: ");                 // prompt domain maximum
+   xMax = s.nextDouble();                             // set domain max
+   System.out.print("Enter y-max: ");                 // prompt range maximum
+   yMax = s.nextDouble();                             // set range max
    
    System.out.print("Enter integration x-min: ");     // prompt integration minimum bound
-   intMin = s.nextDouble();                           // set integration minimum bound
+   a = s.nextDouble();                                // set integration minimum bound
    System.out.print("Enter integration x-max: ");     // prompt integration maximum bound
-   intMax = s.nextDouble();                           // set integration maximum bound
-
+   b = s.nextDouble();                                // set integration maximum bound
+   
+   System.out.print("Enter step size: ");             // prompt step size
+   h = s.nextDouble();                                // set step size
+   
+   System.out.print("The integral approzimation of " + f + " from " + a + " to " + b + " with step size " + h + " (using Composite Simpson's Rule) is " + simpson(a, b, h));
    
    Mapper m = new Mapper();
    m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
