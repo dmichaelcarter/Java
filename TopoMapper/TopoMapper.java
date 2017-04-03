@@ -27,9 +27,9 @@ public class TopoMapper extends JFrame {
   //  USER INPUT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // ******************** SET f(x,y) **********************
   public static double f(double x, double y) {
-    return Math.sin(Math.sqrt(Math.pow(x,2) + Math.pow(y,2)));
+    return Math.cos(Math.exp(Math.pow(x,2) + Math.pow(y,2)));
   }
-  public static String f = "sin(sqrt(x^2 + y^2))";
+  public static String f = "cos(e^(x^2 + y^2))";
   //*******************************************************
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
