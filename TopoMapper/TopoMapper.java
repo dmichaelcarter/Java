@@ -27,11 +27,18 @@ public class TopoMapper extends JFrame {
   //  USER INPUT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // ******************** SET f(x,y) **********************
   public static double f(double x, double y) {
-    return Math.cos(Math.exp(Math.pow(x,2) + Math.pow(y,2)));
+    return Math.cos(Math.exp(Math.pow(x, 2) + Math.pow(y, 2)));
   }
   public static String f = "cos(e^(x^2 + y^2))";
   //*******************************************************
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+  public TopoMapper() {
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setSize(900,900);
+    setBackground(Color.white);
+    setVisible(true);
+  }
   
   public static double xMax;
   public static double yMax;
@@ -128,12 +135,8 @@ public class TopoMapper extends JFrame {
        }
      }
    }
-   
+
    TopoMapper m = new TopoMapper();
-   m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-   m.setSize(900,900);
-   m.setBackground(Color.white);
-   m.setVisible(true);
  }
 }
 
