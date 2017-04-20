@@ -4,8 +4,8 @@ Mapper.java        - Map a function f(x) on the cartesian plane, shade in the ar
                       under the curve for a user-defined interval, approximate the 
                       integral using Composite Simpson's Rule
 TopoMapper.java    - Topographically map a function of two variables f(x,y) in the 
-                      first quadrant of the cartesian plane, with a user-defined
-                      domain (x  in [0, a], y in [0, b])
+                      first quadrant of the cartesian plane, arrow keys adjust the
+                      domain
 
 Each project contains a test run image (.PNG), showing the program in action
 
