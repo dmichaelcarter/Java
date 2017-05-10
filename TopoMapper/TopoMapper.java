@@ -5,8 +5,8 @@
 //
 // Creates a topographic map in the first quadrant of functions of two variables
 // Value is represented by shade
-//     RGB = (0,0,0)        (black) is the minimum value on the domain
-//     RGB = (255,255,255)  (white) is the maximum value on the domain
+//     RGB = (0,0,0)        (black) represents the minimum value on the domain
+//     RGB = (255,255,255)  (white) represents the maximum value on the domain
 //     All other values of f(x,y) are displayed proportionally in the range [0,255]
 // 
 // INPUT:    Function f(x,y) [code input line 26]
@@ -29,8 +29,10 @@ public class TopoMapper extends JFrame {
   //*******************************************************
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
-  public static double xMax;
-  public static double yMax;
+  public static double xMax = 2;
+  public static double yMax = 2;
+  public static double xTrans = 0;
+  public static double yTrans = 0;
   public static double currentX;
   public static double currentY;
   public static double mapMax = 0;
@@ -43,13 +45,33 @@ public class TopoMapper extends JFrame {
     setBackground(Color.white);
     setVisible(true);
     
-   // Use Key Bindings to scale the domain
     JRootPane rootPane = getRootPane();
+    
+    // Use Key Bindings to scale the domain
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "NumPadPlus");
+    rootPane.getActionMap().put("NumPadPlus", new ScaleAction(0));
+    
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.SHIFT_DOWN_MASK), "MainPlus");
+    rootPane.getActionMap().put("MainPlus", new ScaleAction(0));
+    
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "NumPadMinus");
+    rootPane.getActionMap().put("NumPadMinus", new ScaleAction(1));
+    
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.SHIFT_DOWN_MASK), "MainMinus");
+    rootPane.getActionMap().put("MainMinus", new ScaleAction(1));
+    
+    // Use Key Bindings to translate the domain
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Left");
+    rootPane.getActionMap().put("Left", new TransAction(0));
+    
+    rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Right");
+    rootPane.getActionMap().put("Right", new TransAction(1));
+    
     rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Up");
-    rootPane.getActionMap().put("Up", new ScaleAction(0));
+    rootPane.getActionMap().put("Up", new TransAction(2));
     
     rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Down");
-    rootPane.getActionMap().put("Down", new ScaleAction(1));
+    rootPane.getActionMap().put("Down", new TransAction(3));
     
     // Determine extrema on the domain
     for(int i = 75; i <= 825; i++) {                   
@@ -64,7 +86,8 @@ public class TopoMapper extends JFrame {
    }
   }
   
-  // Define the methods to be used when a keybinding is executed
+  
+  // Define the methods to be used when a scaling keybinding is executed
   private class ScaleAction extends AbstractAction {
         int direction;
 
@@ -74,13 +97,13 @@ public class TopoMapper extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          // Up Arrow makes the domain smaller to "zoom in"
+          // ScaleAction(0) makes the domain smaller to "zoom in"
           if (direction == 0) {
-            xMax *= 0.8;
-            yMax *= 0.8;
+            xMax *= 1.0/1.2;
+            yMax *= 1.0/1.2;
             repaint();
           }
-          // Down arrow makes the domain larger to "zoom out"
+          // ScaleAction(1) makes the domain larger to "zoom out"
           if (direction == 1) {
             xMax *= 1.2;
             yMax *= 1.2;
@@ -89,14 +112,48 @@ public class TopoMapper extends JFrame {
         }
   }
   
+  
+  // Define the methods to be used when a translation keybinding is executed
+  private class TransAction extends AbstractAction {
+        int direction;
+
+        TransAction(int direction) {
+            this.direction = direction;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          // TransAction(0) translates the x axis by adding a negative number (move image to the right)
+          if (direction == 0) {
+            xTrans -= xMax / 2; 
+            repaint();
+          }
+          // TransAction(1) translates the x axis by adding a positive number (move image to the left)
+          if (direction == 1) {
+            xTrans += xMax / 2; 
+            repaint();
+          }
+          // TransAction(2) translates the y axis by adding a negative number (move image down)
+          if (direction == 2) {
+            yTrans += yMax / 2; 
+            repaint();
+          }
+          // TransAction(3) translates the y axis by adding a positive number (move image up)
+          if (direction == 3) {
+            yTrans -= yMax / 2; 
+            repaint();
+          }
+        }
+  }
+  
   // Transform from x (pixel space) to x (in domain)
   public static double pixelToX (int i) {
-    return ((i - 75) / 750.0) * xMax;
+    return ((i - 75) / 750.0) * 2*xMax - xMax + xTrans;
   }
  
   // Transform from y (pixel space) to y (in domain)
   public static double pixelToY (int j) {
-    return ((825 - j) / 750.0) * yMax;
+    return ((825 - j) / 750.0) * 2*yMax - yMax + yTrans;
   }
   
   
@@ -133,25 +190,27 @@ public class TopoMapper extends JFrame {
     g.drawString("y", 73,863);      // label "y"
    
     g.drawString("f(x,y) = " + f, 420,45);  // label f(x,y)
-    g.drawString("USE THE ARROW KEYS UP/DOWN!!!", 400, 860);
+    g.drawString("USE +/- TO ZOOM, ARROW KEYS TO SHIFT DOMAIN", 300, 860);
    
     // Add tick marks and label them
     for (int i = 0; i<=10; i++) {
       g.drawLine((75 + i*75),820,(75 + i*75),830);    // add tick marks on x-axis
       g.drawLine(70, (75 + i*75),80,(75 + i*75));     // add tick marks on y-axis
-      currentX =  i*xMax/10;                          // current x-position
-      currentY = yMax - i*yMax/10;                    // current y-position
+      currentX =  i*2*xMax/10 - xMax + xTrans;        // current x-position
+      currentY = yMax - i*2*yMax/10 +yTrans;          // current y-position
      
       // label x-ticks
       if (i==0) {
-        g.drawString(String.format("%.2f", currentX), 45, 845);
+        g.drawString(String.format("%.2f", currentX), 65, 880);
       }
       else {
         g.drawString(String.format("%.2f", currentX), 65 + i*75, 845);
       }
      
       // label y-ticks
-      if (i==10) {continue;}                           // avoid redundant origin labeling
+      if (i==10) {
+        g.drawString(String.format("%.2f", currentY), 20, 80 + i*75);
+      }
       else {
         g.drawString(String.format("%.2f", currentY), 35, 80 + i*75);
       }
@@ -160,9 +219,6 @@ public class TopoMapper extends JFrame {
   }
  
  public static void main(String[] args) throws Exception{
-   // Test values to initiate domain
-   xMax = 2.0;
-   yMax = 2.0;
    
    // Create TopoMapper object; begin mapping
    new TopoMapper();
