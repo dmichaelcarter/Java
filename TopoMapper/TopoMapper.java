@@ -12,7 +12,8 @@
 // INPUT:    Function f(x,y) [code input line 26]
 //
 // OUTPUT:   Topographical representation mapped on the Cartesian Plane
-//           Keybindings: UP and DOWN arrow keys change the domain
+//           Keybindings: ARROW KEYS translate the domain
+//                        <+> and <-> KEYS zoom the domain in/out
 //************************************************************************************************************
 
 import javax.swing.*;
