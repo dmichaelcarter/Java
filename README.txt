@@ -1,5 +1,10 @@
 The following folders contain some Java programs I have written outside of school.
 
+DrawFFT.java       - Draw a waveform with Click & Drag, and transform it into the
+                      frequency domain in real time, using the Fast Fourier
+                      Transform algorithm.  Compute the inverse on the frequency
+                      data and transform back into the time domain.
+
 Mapper.java        - Map a function f(x) on the cartesian plane, shade in the area 
                       under the curve for a user-defined interval, approximate the 
                       integral using Composite Simpson's Rule
