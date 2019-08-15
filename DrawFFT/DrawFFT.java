@@ -24,11 +24,12 @@ public class DrawFFT extends JFrame{
   public static Complex ifftY[] = new Complex[256];
   public static double amplitudes[] = new double[128];
   public static int intAmplitudes[] = new int[128];
+  public static int frequency = 1;
   
   public static void reset(){
-    for (int i = 0; i < 256; i++){
-      y[i] = new Complex(100,0);
-    }
+    for (int u = 0; u < 256; u++){
+          y[u] = new Complex(Math.sin((u+1.0)*frequency/(256.0/(2.0*Math.PI))),0);
+        }
     fftY = FFT.fft(y);
     fftAmplitudes();
     amplitudesToInt();
@@ -52,7 +53,7 @@ public class DrawFFT extends JFrame{
       else if ((int) Math.round(amplitudes[k]) < lowerBound){
         intAmplitudes[k] = lowerBound;
       }
-      else {intAmplitudes[k] = (upperBound -(int) Math.round(amplitudes[k]));}
+      else {intAmplitudes[k] = (upperBound -(int) Math.round(amplitudes[k]*3.6));}
     }
     
   }
@@ -73,7 +74,7 @@ public class DrawFFT extends JFrame{
           public void mouseDragged(MouseEvent point){
 
             if (((point.getX() > 25) && (point.getX() <= 281)) && ((point.getY() >= 450) && (point.getY() <=550))){
-              y[point.getX() -26] = new Complex(point.getY()-400, 0);
+              y[point.getX() -26] = new Complex(((100-(point.getY() -450))/50.0)-1, 0);
               fftY = FFT.fft(y);
               fftAmplitudes();
               amplitudesToInt();
@@ -104,41 +105,41 @@ public class DrawFFT extends JFrame{
         g.drawString("INVERSE FAST FOURIER TRANSFORM", 600, 445);
         g.drawString("\"Fast Fourier Transform on a User-Defined Waveform\" by David Michael Carter (August 2019)", 150, 665);
         
+        
         //Paint Mouse-dragged points
-        for (int i = 0; i < 256; i++){
-          
+        for (int i = 0; i < 256; i++){          
           //Paint all Y-values
-          g.drawLine(i+25,(int)(Math.round(y[i].re()))+400, i+25, (int)(Math.round(y[i].re()))+400);
+          g.drawLine(i+25,(int)(100-Math.round((y[i].re()+1)*50.0)+450), i+25, (int)(100-Math.round((y[i].re()+1)*50.0)+450));
           
           //Vertically interpolate when adjacent Y-values are distant
           if(i < 255){
-            if(Math.abs((int)(Math.round(y[i].re()))-(int)(Math.round(y[i+1].re()))) > 1){
-              g.drawLine(i+25,(int)(Math.round(y[i].re()))+400, i+25, (int)(Math.round(y[i+1].re()))+400);
+            if(Math.abs((int)Math.round((y[i].re()+1)*50.0)-(int)Math.round((y[i+1].re()+1)*50.0)) > 1){
+              g.drawLine(i+25,(int)(100-Math.round((y[i].re()+1)*50.0)+450), i+25, (int)(100-Math.round((y[i+1].re()+1)*50.0)+450));
             }
           }
         }
         
         //Paint FFT
-        for (int k = 0; k < 128; k++){
+        for (int j = 0; j < 128; j++){
          
-            g.drawLine(2*k+301,intAmplitudes[k]+50 , 2*k+301, intAmplitudes[k]+50);
+            g.drawLine(2*j+301,intAmplitudes[j]+50 , 2*j+301, intAmplitudes[j]+50);
             
             //Vertically interpolate when adjacent FFT frequencies are distant
-            if(k < 127){
-              if(Math.abs(intAmplitudes[k]-intAmplitudes[k+1]) > 1){
-                g.drawLine(2*k+301, intAmplitudes[k]+50, 2*k+302, intAmplitudes[k+1]+50);
+            if(j < 127){
+              if(Math.abs(intAmplitudes[j]-intAmplitudes[j+1]) > 1){
+                g.drawLine(2*j+301, intAmplitudes[j]+50, 2*j+302, intAmplitudes[j+1]+50);
               }
             }
         }
         
         //Paint iFFT (drawing approximation) points
-        for (int j = 0; j < 256; j++){
-          g.drawLine(j+577,(int)(Math.round(ifftY[j].re()))+400, j+577, (int)(Math.round(ifftY[j].re()))+400);
+        for (int k = 0; k < 256; k++){
+          g.drawLine(k+577,(int)(100-Math.round((ifftY[k].re()+1)*50.0)+450), k+577, (int)(100-Math.round((ifftY[k].re()+1)*50.0)+450));
           
           //Vertically interpolate when adjacent Y-values are distant
-          if(j < 255){
-            if(Math.abs((int)(Math.round(ifftY[j].re()))-(int)(Math.round(ifftY[j+1].re()))) > 1){
-              g.drawLine(j+577,(int)(Math.round(ifftY[j].re()))+400, j+577, (int)(Math.round(ifftY[j+1].re()))+400);
+           if(k < 255){
+            if(Math.abs((int)(100-Math.round((ifftY[k].re()+1)*50.0)+450)-(int)(100-Math.round((ifftY[k+1].re()+1)*50.0)+450)) > 1){
+              g.drawLine(k+577,(int)(100-Math.round((ifftY[k].re()+1)*50.0)+450), k+577, (int)(100-Math.round((ifftY[k+1].re()+1)*50.0)+450));
             }
           }
         }
