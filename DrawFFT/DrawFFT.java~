@@ -27,6 +27,11 @@ public class DrawFFT extends JFrame{
   public static int frequency = 1;
   
   public static void reset(){
+    frequency = 1;
+    computeSineFFT();
+  }
+  
+  public static void computeSineFFT(){
     for (int u = 0; u < 256; u++){
           y[u] = new Complex(Math.sin((u+1.0)*frequency/(256.0/(2.0*Math.PI))),0);
         }
@@ -64,7 +69,6 @@ public class DrawFFT extends JFrame{
     fft.setSize(858, 700);
     fft.setBackground(Color.white);
     fft.setResizable(false);
-   
 
     JPanel p = new JPanel(){
       {
@@ -86,12 +90,37 @@ public class DrawFFT extends JFrame{
         
         JButton resetButton = new JButton("Reset");
         add(resetButton);
-        resetButton.setBounds(90,570,125,25);
-    
+        resetButton.setBounds(90,590,125,25);
         resetButton.addActionListener(new ActionListener(){
           public void actionPerformed(ActionEvent e){
             reset();
             repaint();
+          }
+        });
+        
+        JButton freqDownButton = new JButton("Frequency (-)");
+        add(freqDownButton);
+        freqDownButton.setBounds(25,560,125,25);
+        freqDownButton.addActionListener(new ActionListener(){
+          public void actionPerformed(ActionEvent e){
+            if (frequency > 1){
+              frequency--;
+              computeSineFFT();
+              repaint();
+            }
+          }
+        });
+        
+        JButton freqUpButton = new JButton("Frequency (+)");
+        add(freqUpButton);
+        freqUpButton.setBounds(153,560,125,25);
+        freqUpButton.addActionListener(new ActionListener(){
+          public void actionPerformed(ActionEvent e){
+            if (frequency < 128){
+              frequency++;
+              computeSineFFT();
+              repaint();
+            }
           }
         });
       }
