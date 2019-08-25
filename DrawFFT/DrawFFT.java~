@@ -30,6 +30,8 @@ public class DrawFFT extends JFrame{
   
   //Reset wave to Sine with frequency = 1
   public static void reset(){
+    isSine = true;
+    isSquare = false;
     frequency = 1;
     doSine();
     compute();
@@ -46,16 +48,16 @@ public class DrawFFT extends JFrame{
   public static void doSquare(){
     int stepSize = 256 / (frequency*2);
     int counter = 0;
-    Complex value = new Complex(0.9,0);
+    Complex squareValue = new Complex(0.9,0);
     for (int v = 0; v<256; v++){
       if (counter <= stepSize){
-        y[v] = value;
+        y[v] = squareValue;
         counter++;
       }
       else{
         counter = 1;
-        value = value.times(new Complex(-1,0));
-        y[v] = value;
+        squareValue = squareValue.times(new Complex(-1,0));
+        y[v] = squareValue;
       }
     }
   }

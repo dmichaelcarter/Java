@@ -27,11 +27,13 @@ public class DrawFFT extends JFrame{
   public static int frequency = 1;
   public static boolean isSine = true;
   public static boolean isSquare = false;
+  public static boolean isSawtooth = false;
   
   //Reset wave to Sine with frequency = 1
   public static void reset(){
     isSine = true;
     isSquare = false;
+    isSawtooth = false;
     frequency = 1;
     doSine();
     compute();
@@ -46,18 +48,37 @@ public class DrawFFT extends JFrame{
   
   //Generate a Square wave
   public static void doSquare(){
-    int stepSize = 256 / (frequency*2);
-    int counter = 0;
+    int squarePeriod = 256 / (frequency*2);
+    int squareCounter = 0;
     Complex squareValue = new Complex(0.9,0);
     for (int v = 0; v<256; v++){
-      if (counter <= stepSize){
+      if (squareCounter <= squarePeriod){
         y[v] = squareValue;
-        counter++;
+        squareCounter++;
       }
       else{
-        counter = 1;
+        squareCounter = 1;
         squareValue = squareValue.times(new Complex(-1,0));
         y[v] = squareValue;
+      }
+    }
+  }
+  
+  //Generate a Sawtooth wave
+  public static void doSawtooth(){
+    int sawtoothPeriod = 256 / frequency;
+    int sawtoothCounter = 0;
+    double sawtoothSlope = 2.0 / sawtoothPeriod;
+   // Complex sawtoothValue = new Complex(-1,0);
+    for (int w = 0; w<256; w++){
+      if (sawtoothCounter <= sawtoothPeriod){
+        y[w] = new Complex(sawtoothSlope*sawtoothCounter -1.0, 0);
+        sawtoothCounter++;
+      }
+      else{
+        sawtoothCounter = 1;
+        //sawtoothValue = new Complex(-1,0);
+        y[w] = new Complex(-1,0);
       }
     }
   }
@@ -103,6 +124,11 @@ public class DrawFFT extends JFrame{
       doSquare();
       compute();
     }
+    else if (isSawtooth){
+      doSawtooth();
+      compute();
+    }
+    else{System.out.println("oops");}
   }
    
   public static void main(String[] args){
@@ -147,6 +173,7 @@ public class DrawFFT extends JFrame{
           public void actionPerformed(ActionEvent e){
             isSine = true;
             isSquare = false;
+            isSawtooth = false;
             doWave();
             repaint();
           }
@@ -160,6 +187,21 @@ public class DrawFFT extends JFrame{
           public void actionPerformed(ActionEvent e){
             isSine = false;
             isSquare = true;
+            isSawtooth = false;
+            doWave();
+            repaint();
+          }
+        });
+        
+        //Create a button to generate a Sawtooth wave
+        JButton sawtoothButton = new JButton("Sawtooth");
+        add(sawtoothButton);
+        sawtoothButton.setBounds(25,110,125,25);
+        sawtoothButton.addActionListener(new ActionListener(){
+          public void actionPerformed(ActionEvent e){
+            isSine = false;
+            isSquare = false;
+            isSawtooth = true;
             doWave();
             repaint();
           }
