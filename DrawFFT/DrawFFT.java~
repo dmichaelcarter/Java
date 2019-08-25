@@ -25,7 +25,7 @@ public class DrawFFT extends JFrame{
   public static double amplitudes[] = new double[128];
   public static int intAmplitudes[] = new int[128];
   public static int frequency = 1;
-  public static boolean isSine = false;
+  public static boolean isSine = true;
   public static boolean isSquare = false;
   
   //Reset wave to Sine with frequency = 1
@@ -35,13 +35,14 @@ public class DrawFFT extends JFrame{
     compute();
   }
   
-  //Generate a sine wave
+  //Generate a Sine wave
   public static void doSine(){
     for (int u = 0; u < 256; u++){
           y[u] = new Complex(Math.sin((u+1.0)*frequency/(256.0/(2.0*Math.PI))),0);
         }
   }
   
+  //Generate a Square wave
   public static void doSquare(){
     int stepSize = 256 / (frequency*2);
     int counter = 0;
@@ -184,7 +185,7 @@ public class DrawFFT extends JFrame{
           public void actionPerformed(ActionEvent e){
             if (frequency < 127){
               frequency++;
-              doSquare();
+              doWave();
               repaint();
             }
           }
