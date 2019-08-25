@@ -25,18 +25,42 @@ public class DrawFFT extends JFrame{
   public static double amplitudes[] = new double[128];
   public static int intAmplitudes[] = new int[128];
   public static int frequency = 1;
+  public static boolean isSine = false;
+  public static boolean isSquare = false;
   
   //Reset wave to Sine with frequency = 1
   public static void reset(){
     frequency = 1;
-    computeSineFFT();
+    doSine();
+    compute();
   }
   
-  //Compute FFT for a sine wave
-  public static void computeSineFFT(){
+  //Generate a sine wave
+  public static void doSine(){
     for (int u = 0; u < 256; u++){
           y[u] = new Complex(Math.sin((u+1.0)*frequency/(256.0/(2.0*Math.PI))),0);
         }
+  }
+  
+  public static void doSquare(){
+    int stepSize = 256 / (frequency*2);
+    int counter = 0;
+    Complex value = new Complex(0.9,0);
+    for (int v = 0; v<256; v++){
+      if (counter <= stepSize){
+        y[v] = value;
+        counter++;
+      }
+      else{
+        counter = 1;
+        value = value.times(new Complex(-1,0));
+        y[v] = value;
+      }
+    }
+  }
+  
+  //Compute FFT
+  public static void compute(){
     fftY = FFT.fft(y);
     fftAmplitudes();
     amplitudesToInt();
@@ -64,7 +88,18 @@ public class DrawFFT extends JFrame{
       }
       else {intAmplitudes[k] = (upperBound -(int) Math.round(amplitudes[k]*3.6));}
     }
-    
+  }
+  
+  //Determine which type of wave is selected; generate it
+  public static void doWave(){
+    if (isSine){
+      doSine();
+      compute();
+    }
+    else if (isSquare){
+      doSquare();
+      compute();
+    }
   }
    
   public static void main(String[] args){
@@ -78,15 +113,13 @@ public class DrawFFT extends JFrame{
       {
         setLayout(null);
         
+        //Add mouse listener
         addMouseMotionListener(new MouseMotionAdapter(){
           public void mouseDragged(MouseEvent point){
 
             if (((point.getX() > 25) && (point.getX() <= 281)) && ((point.getY() >= 450) && (point.getY() <=550))){
               y[point.getX() -26] = new Complex(((100-(point.getY() -450))/50.0)-1, 0);
-              fftY = FFT.fft(y);
-              fftAmplitudes();
-              amplitudesToInt();
-              ifftY = FFT.ifft(fftY);
+              compute();
               repaint();
             }
           }
@@ -103,7 +136,33 @@ public class DrawFFT extends JFrame{
           }
         });
         
-        //Create button to increase Sine frequency by 1
+        //Create a button to generate a Sine wave
+        JButton sineButton = new JButton("Sine");
+        add(sineButton);
+        sineButton.setBounds(25,50,125,25);
+        sineButton.addActionListener(new ActionListener(){
+          public void actionPerformed(ActionEvent e){
+            isSine = true;
+            isSquare = false;
+            doWave();
+            repaint();
+          }
+        });
+        
+        //Create a button to generate a Square wave
+        JButton squareButton = new JButton("Square");
+        add(squareButton);
+        squareButton.setBounds(25,80,125,25);
+        squareButton.addActionListener(new ActionListener(){
+          public void actionPerformed(ActionEvent e){
+            isSine = false;
+            isSquare = true;
+            doWave();
+            repaint();
+          }
+        });
+        
+        //Create button to increase frequency by 1
         JButton freqDownButton = new JButton("Frequency (-)");
         add(freqDownButton);
         freqDownButton.setBounds(25,560,125,25);
@@ -111,13 +170,13 @@ public class DrawFFT extends JFrame{
           public void actionPerformed(ActionEvent e){
             if (frequency > 1){
               frequency--;
-              computeSineFFT();
+              doWave();
               repaint();
             }
           }
         });
         
-        //Create cutton to decrease Sine frequency by 1
+        //Create cutton to decrease frequency by 1
         JButton freqUpButton = new JButton("Frequency (+)");
         add(freqUpButton);
         freqUpButton.setBounds(153,560,125,25);
@@ -125,7 +184,7 @@ public class DrawFFT extends JFrame{
           public void actionPerformed(ActionEvent e){
             if (frequency < 127){
               frequency++;
-              computeSineFFT();
+              doSquare();
               repaint();
             }
           }
