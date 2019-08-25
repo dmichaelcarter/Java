@@ -3,7 +3,7 @@
 // David Michael Carter
 // Created 03 August 2019
 //
-// INPUT:   Click & Drag to create a user-defined waveform
+// INPUT:   Click & Drag to create a user-defined waveform, or select/edit a preset wave.
 //
 // OUTPUT:  User-defined waveform is transformed to frequency domain using the Fast Fourier Transform.
 //          Frequency data is then transformed back into the time domain using the Inverse FFT.
